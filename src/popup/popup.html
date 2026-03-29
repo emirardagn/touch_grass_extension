@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Touch Grass</title>
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        margin: 0;
+        width: 390px;
+        background: radial-gradient(circle at top, #1f2937 0%, #0b1020 65%);
+        color: #eef2ff;
+      }
+      main { padding: 14px; }
+      .card {
+        background: rgba(15, 23, 42, 0.86);
+        border: 1px solid rgba(99, 102, 241, 0.28);
+        border-radius: 14px;
+        padding: 14px;
+        backdrop-filter: blur(6px);
+      }
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .title { margin: 0; font-size: 16px; font-weight: 700; }
+      .sub { margin: 2px 0 0; font-size: 12px; color: #b8c0ff; }
+      .step {
+        font-size: 11px;
+        letter-spacing: 0.03em;
+        color: #c7d2fe;
+        background: rgba(79, 70, 229, 0.25);
+        border: 1px solid rgba(129, 140, 248, 0.4);
+        padding: 4px 8px;
+        border-radius: 999px;
+      }
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.12s ease, opacity 0.12s ease;
+      }
+      button:hover { transform: translateY(-1px); }
+      button:disabled { opacity: 0.55; cursor: not-allowed; }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .choice {
+        background: rgba(30, 41, 59, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.28);
+        color: #e2e8f0;
+      }
+      .choice.active {
+        background: linear-gradient(135deg, #4338ca, #1d4ed8);
+        border-color: rgba(191, 219, 254, 0.45);
+      }
+      .primary {
+        width: 100%;
+        margin-top: 10px;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: #062814;
+      }
+      .secondary {
+        width: 100%;
+        margin-top: 8px;
+        background: rgba(51, 65, 85, 0.9);
+        color: #e5e7eb;
+      }
+      #status { margin-top: 10px; font-size: 12px; color: #c7d2fe; }
+      .panel-label { margin-top: 10px; font-size: 12px; color: #93c5fd; }
+      .panel {
+        white-space: pre-wrap;
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid rgba(148, 163, 184, 0.24);
+        border-radius: 10px;
+        padding: 10px;
+        margin-top: 6px;
+        max-height: 178px;
+        overflow: auto;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+      #sectionsWrap { margin-top: 8px; }
+      #sectionDropdown {
+        width: 100%;
+        margin-top: 6px;
+        border-radius: 10px;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        background: rgba(15, 23, 42, 0.8);
+        color: #e2e8f0;
+        padding: 8px;
+      }
+      #sectionText { margin-top: 8px; max-height: 180px; }
+      #sectionList {
+        margin-top: 6px;
+        max-height: 120px;
+        overflow: auto;
+        border: 1px solid rgba(148, 163, 184, 0.24);
+        border-radius: 10px;
+        padding: 8px;
+        background: rgba(15, 23, 42, 0.5);
+      }
+      .sectionItem {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 6px 2px;
+        font-size: 12px;
+      }
+      .sectionMeta { color: #a5b4fc; font-size: 11px; }
+      #result { max-height: 210px; }
+      .hidden { display: none; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="card">
+        <div class="top">
+          <div>
+            <h1 class="title">Touch Grass</h1>
+            <p class="sub" data-i18n="appSubtitle">LinkedIn saçmalık çevirici</p>
+          </div>
+          <span class="step" id="stepBadge" data-i18n="step1Badge">Adım 1/2</span>
+        </div>
+
+        <div id="step1">
+          <div data-i18n="step1Label">Ne analiz ediyorsun?</div>
+          <div class="grid">
+            <button class="choice" id="pickPost" data-i18n="pickPost">Post</button>
+            <button class="choice" id="pickProfile" data-i18n="pickProfile">Profil</button>
+          </div>
+          <button class="primary" id="extractBtn" disabled data-i18n="extractBtn">İçeriği Çek</button>
+        </div>
+
+        <div id="step2" class="hidden">
+          <div class="panel-label" data-i18n="extractPreviewLabel">İçerik önizleme</div>
+          <div class="panel" id="preview"></div>
+          <div id="sectionsWrap" class="hidden">
+            <div class="panel-label" data-i18n="sectionViewerLabel">Section görüntüleyici</div>
+            <select id="sectionDropdown"></select>
+            <div class="panel" id="sectionText"></div>
+            <div class="panel-label" data-i18n="chooseSectionsLabel">Özetlenecek section'ları seç</div>
+            <div id="sectionList"></div>
+          </div>
+          <button class="primary" id="confirmBtn" data-i18n="confirmBtn">Güzel görünüyor, özetle</button>
+          <button class="secondary" id="backBtn" data-i18n="backBtn">Geri</button>
+        </div>
+
+        <div class="panel-label" data-i18n="resultLabel">Özet</div>
+        <div class="panel" id="result"></div>
+        <div id="status" data-i18n="statusIdle">Post veya Profil seç.</div>
+        <button class="secondary" id="openOptions" data-i18n="settingsBtn">Ayarlar</button>
+      </section>
+    </main>
+    <script src="./popup.js"></script>
+  </body>
+</html>

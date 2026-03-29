@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Touch Grass Settings</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b1020;
+        --card: rgba(15, 23, 42, 0.92);
+        --border: rgba(99, 102, 241, 0.28);
+        --border-subtle: rgba(148, 163, 184, 0.2);
+        --text: #eef2ff;
+        --text-muted: #94a3b8;
+        --accent: #4338ca;
+        --accent2: #1d4ed8;
+        --green: #22c55e;
+        --green2: #16a34a;
+        --danger: #ef4444;
+        --danger2: #b91c1c;
+        --surface: rgba(30, 41, 59, 0.8);
+        --surface2: rgba(51, 65, 85, 0.8);
+      }
+      * { box-sizing: border-box; }
+      body {
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: radial-gradient(ellipse at top, #1f2937 0%, var(--bg) 60%);
+        color: var(--text);
+        margin: 0;
+        min-height: 100vh;
+        padding: 28px 20px 48px;
+      }
+      .app {
+        max-width: 780px;
+        margin: 0 auto;
+      }
+
+      /* Header */
+      .header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+      .header-logo h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+      .header-logo p {
+        margin: 4px 0 0;
+        font-size: 13px;
+        color: #b8c0ff;
+      }
+      .tabs {
+        display: flex;
+        gap: 6px;
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 4px;
+      }
+      .tab {
+        background: transparent;
+        border: 0;
+        color: var(--text-muted);
+        border-radius: 7px;
+        padding: 7px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s;
+      }
+      .tab.active {
+        background: var(--surface2);
+        color: var(--text);
+      }
+
+      /* Panel */
+      .panel { display: block; }
+      .panel.hidden { display: none; }
+
+      /* Card */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 22px;
+        backdrop-filter: blur(8px);
+        margin-bottom: 16px;
+      }
+      .card-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #a5b4fc;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin: 0 0 16px;
+      }
+
+      /* Form fields */
+      .field { margin-bottom: 16px; }
+      .field:last-child { margin-bottom: 0; }
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #c7d2fe;
+        margin-bottom: 6px;
+      }
+      input[type="text"],
+      input[type="password"],
+      input[type="number"],
+      select,
+      textarea {
+        width: 100%;
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid var(--border-subtle);
+        border-radius: 8px;
+        color: var(--text);
+        padding: 9px 11px;
+        font-size: 13px;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      input:focus, select:focus, textarea:focus {
+        border-color: rgba(129, 140, 248, 0.6);
+      }
+      textarea { resize: vertical; min-height: 120px; line-height: 1.5; }
+      .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .input-row {
+        display: flex;
+        gap: 8px;
+      }
+      .input-row input { flex: 1; }
+
+      /* Buttons */
+      .btn-primary, .btn-secondary, .btn-danger, .btn-xs {
+        border: 0;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.1s, opacity 0.1s;
+        font-size: 13px;
+        padding: 9px 16px;
+      }
+      .btn-primary:hover, .btn-secondary:hover, .btn-danger:hover, .btn-xs:hover {
+        transform: translateY(-1px);
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--green), var(--green2));
+        color: #062814;
+      }
+      .btn-secondary {
+        background: var(--surface2);
+        color: var(--text);
+      }
+      .btn-danger {
+        background: linear-gradient(135deg, var(--danger), var(--danger2));
+        color: #fff;
+      }
+      .btn-xs {
+        padding: 5px 10px;
+        font-size: 12px;
+        background: var(--surface);
+        color: #c7d2fe;
+        border: 1px solid var(--border-subtle);
+      }
+      .btn-xs.btn-danger-xs {
+        background: rgba(239, 68, 68, 0.18);
+        color: #fca5a5;
+        border-color: rgba(239, 68, 68, 0.3);
+      }
+      #toggleKey {
+        background: var(--surface);
+        border: 1px solid var(--border-subtle);
+        border-radius: 8px;
+        color: var(--text-muted);
+        padding: 9px 12px;
+        cursor: pointer;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      /* Save row */
+      .save-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 20px;
+      }
+      #saveStatus {
+        font-size: 13px;
+        color: var(--green);
+      }
+
+      /* Warning */
+      .warn {
+        background: rgba(239, 68, 68, 0.12);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 8px;
+        color: #fca5a5;
+        font-size: 12px;
+        padding: 10px 12px;
+        margin-bottom: 18px;
+        line-height: 1.5;
+      }
+
+      /* Prompts list */
+      .prompts-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .prompt-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--surface);
+        border: 1px solid var(--border-subtle);
+        border-radius: 10px;
+        padding: 10px 14px;
+        transition: border-color 0.15s;
+      }
+      .prompt-row:has(input:checked) {
+        border-color: rgba(129, 140, 248, 0.5);
+        background: rgba(67, 56, 202, 0.15);
+      }
+      .prompt-row input[type="radio"] {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        accent-color: #818cf8;
+      }
+      .prompt-info {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+      }
+      .prompt-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .badge {
+        font-size: 11px;
+        background: rgba(99, 102, 241, 0.25);
+        border: 1px solid rgba(129, 140, 248, 0.4);
+        color: #a5b4fc;
+        border-radius: 999px;
+        padding: 2px 7px;
+        white-space: nowrap;
+      }
+      .prompt-actions {
+        display: flex;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+
+      /* Editor */
+      .editor {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(129, 140, 248, 0.3);
+        border-radius: 12px;
+        padding: 18px;
+        margin-top: 16px;
+      }
+      .editor.hidden { display: none; }
+      .editor-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: #a5b4fc;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin: 0 0 14px;
+      }
+      .editor-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <div class="header-logo">
+          <h1>Touch Grass</h1>
+          <p data-i18n="settingsTitle">Touch Grass Ayarları</p>
+        </div>
+        <nav class="tabs">
+          <button class="tab active" data-tab="general" data-i18n="tabGeneral">Genel</button>
+          <button class="tab" data-tab="prompts" data-i18n="tabPrompts">Promptlar</button>
+        </nav>
+      </header>
+
+      <!-- General Panel -->
+      <section class="panel" id="panel-general">
+        <div class="card">
+          <p class="warn" data-i18n="apiKeyWarning">API key extension içinde saklanır.</p>
+
+          <div class="field">
+            <label for="apiKey" data-i18n="apiKeyLabel">OpenAI API Key</label>
+            <div class="input-row">
+              <input id="apiKey" type="password" placeholder="sk-..." />
+              <button id="toggleKey" type="button" data-i18n="toggleShow">Göster</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="model" data-i18n="modelLabel">Model</label>
+            <select id="model">
+              <option value="gpt-4o-mini">gpt-4o-mini</option>
+              <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+              <option value="gpt-4.1">gpt-4.1</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="maxTokens" data-i18n="maxTokensLabel">Maks Çıktı Token</label>
+            <input id="maxTokens" type="number" min="80" max="800" step="10" />
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="uiLanguage" data-i18n="uiLangLabel">Arayüz Dili</label>
+              <select id="uiLanguage">
+                <option value="tr">Türkçe</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="responseLanguage" data-i18n="responseLangLabel">Yanıt Dili</label>
+              <select id="responseLanguage">
+                <option value="tr">Türkçe</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="save-row">
+            <button id="saveBtn" class="btn-primary" data-i18n="saveBtn">Kaydet</button>
+            <span id="saveStatus"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Prompts Panel -->
+      <section class="panel hidden" id="panel-prompts">
+        <div class="card">
+          <p class="card-title" data-i18n="activePromptLabel">Aktif Prompt</p>
+          <div id="promptsList" class="prompts-list"></div>
+          <button id="addPromptBtn" class="btn-secondary" data-i18n="addPromptBtn">+ Yeni Prompt Ekle</button>
+
+          <div id="promptEditor" class="editor hidden">
+            <p class="editor-title" id="editorTitle">Prompt</p>
+            <div class="field">
+              <label for="promptName" data-i18n="promptNameLabel">Prompt Adı</label>
+              <input id="promptName" type="text" />
+            </div>
+            <div class="field">
+              <label for="promptText" data-i18n="promptTextLabel">Prompt Metni</label>
+              <textarea id="promptText" rows="10"></textarea>
+            </div>
+            <div class="editor-actions">
+              <button id="savePromptBtn" class="btn-primary" data-i18n="savePromptBtn">Kaydet</button>
+              <button id="cancelPromptBtn" class="btn-secondary" data-i18n="cancelBtn">İptal</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script src="./options.js"></script>
+  </body>
+</html>
